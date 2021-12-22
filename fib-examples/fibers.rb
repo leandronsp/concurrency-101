@@ -2,13 +2,15 @@ require './lib/fib-sequence'
 
 puts "Main process: #{Process.pid}"
 initial_time = Time.now
+fibers = []
 
-fork do
-  puts "Fork process: #{Process.pid}"
-  FibSequence.call(80, 30)
+5.times do
+  fibers << Fiber.new do
+    puts "Fiber process: #{Process.pid}"
+    FibSequence.call(30, 30)
+  end
 end
 
-FibSequence.call(80, 30)
+fibers.each(&:resume)
 
-Process.waitall
 puts "Done in #{Time.now - initial_time} seconds"

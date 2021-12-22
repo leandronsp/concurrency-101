@@ -1,3 +1,5 @@
+require 'async'
+
 class Processor
   def self.process(job)
     action = job[:action]
@@ -27,6 +29,20 @@ class Processor
   end
 
   def self.process_fibers(queue)
+    fibers = Array.new(queue.length) do
+      Fiber.new do
+        job = queue.deq
+
+        self.process(job)
+      end
+    end
+
+    fibers.each(&:resume)
+  end
+
+  def self.process_fibers_async(queue)
+    Fiber.set_scheduler Async::Scheduler.new(Async::Reactor.new)
+
     fibers = Array.new(queue.length) do
       Fiber.new do
         job = queue.deq

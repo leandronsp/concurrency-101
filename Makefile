@@ -3,4 +3,4 @@ bash:
 
 gems.install:
 	@docker-compose run app \
-		gem install sidekiq
+		gem install sidekiq async-io
