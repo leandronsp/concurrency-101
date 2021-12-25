@@ -7,7 +7,10 @@ fibers = []
 5.times do
   fibers << Fiber.new do
     puts "Fiber process: #{Process.pid}"
-    FibSequence.call(30, 30)
+
+    30.times do
+      FibSequence.fib(30)
+    end
   end
 end
 

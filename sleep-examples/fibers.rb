@@ -1,19 +1,18 @@
 require 'fiber'
 require 'async'
-require './lib/async-sleeper'
+require './lib/sleeper'
 
-puts "Main process: #{Process.pid}"
 initial_time = Time.now
-fibers = []
 
-Fiber.set_scheduler Async::Scheduler.new(Async::Reactor.new)
+reactor = Async::Reactor.new
+Fiber.set_scheduler Async::Scheduler.new(reactor)
 
-5.times do
-  fibers << Fiber.new do
-    AsyncSleeper.call(5, 0.5)
+1_000.times do
+  Fiber.schedule do
+    Sleeper.call(0.005)
   end
 end
 
-fibers.each(&:resume)
+reactor.run
 
 puts "Done in #{Time.now - initial_time} seconds"

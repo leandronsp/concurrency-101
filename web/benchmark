@@ -1,0 +1,15 @@
+### Threaded - IO ###
+ab -n 20 -c 5 http://localhost:3000/
+
+Requests:                 20
+Concurrency level:        5
+Requests per second:      218
+Time per request:         22
+
+### Fiber - IO ###
+ab -n 20 -c 5 http://localhost:3000/
+
+Requests:                 20
+Concurrency level:        5
+Requests per second:      422
+Time per request:         11

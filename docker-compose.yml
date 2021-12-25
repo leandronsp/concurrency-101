@@ -7,6 +7,18 @@ services:
       - ./:/app
       - rubygems:/usr/local/bundle
     working_dir: /app
+    ports:
+      - "3000:3000"
+    networks:
+      - test
+
+  redis:
+    image: redis
+    networks:
+      - test
 
 volumes:
   rubygems:
+
+networks:
+  test:

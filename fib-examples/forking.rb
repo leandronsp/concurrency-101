@@ -6,7 +6,10 @@ initial_time = Time.now
 5.times do
   fork do
     puts "Fork process: #{Process.pid}"
-    FibSequence.call(30, 30)
+
+    30.times do
+      FibSequence.fib(30)
+    end
   end
 end
 

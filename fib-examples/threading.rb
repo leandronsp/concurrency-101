@@ -7,7 +7,10 @@ threads = []
 5.times do
   threads << Thread.new do
     puts "Thread process: #{Process.pid}"
-    FibSequence.call(30, 30)
+
+    30.times do
+      FibSequence.fib(30)
+    end
   end
 end
 

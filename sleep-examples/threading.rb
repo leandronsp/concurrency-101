@@ -4,9 +4,9 @@ puts "Main process: #{Process.pid}"
 initial_time = Time.now
 threads = []
 
-5.times do
+1_000.times do
   threads << Thread.new do
-    Sleeper.call(5, 0.5)
+    Sleeper.call(0.005)
   end
 end
 

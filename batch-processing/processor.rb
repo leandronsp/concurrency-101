@@ -40,18 +40,19 @@ class Processor
     fibers.each(&:resume)
   end
 
-  def self.process_fibers_async(queue)
-    Fiber.set_scheduler Async::Scheduler.new(Async::Reactor.new)
+  def self.process_fibers_with_scheduler(queue)
+    reactor = Async::Reactor.new
+    Fiber.set_scheduler Async::Scheduler.new(reactor)
 
     fibers = Array.new(queue.length) do
-      Fiber.new do
+      Fiber.schedule do
         job = queue.deq
 
         self.process(job)
       end
     end
 
-    fibers.each(&:resume)
+    reactor.run
   end
 
   def self.process_forking(queue)
