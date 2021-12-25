@@ -21,3 +21,7 @@ Start the interactive enqueuer:
 ```
 ruby background-jobs/redis/enqueuer.rb
 ```
+In case you wish to unleash the madness and enqueue lots of jobs at once:
+```
+ruby background.jobs/redis/madness.rb
+```
