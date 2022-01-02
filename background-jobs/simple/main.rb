@@ -1,8 +1,8 @@
 require './lib/fib-sequence'
 require './lib/sleeper'
-require './lib/my-queue'
+require './lib/synchronized-queue'
 
-@queue = MyQueue.new
+@queue = SynchronizedQueue.new
 
 ### WORKERS ###
 

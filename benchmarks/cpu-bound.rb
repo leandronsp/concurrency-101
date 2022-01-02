@@ -1,6 +1,6 @@
 require 'benchmark'
 require './lib/fib-sequence'
-require './lib/my-queue'
+require './lib/synchronized-queue'
 require './batch-processing/processor'
 
 puts "Main process: #{Process.pid}"
@@ -8,7 +8,7 @@ puts "Main process: #{Process.pid}"
 # enqueue
 
 def build_queue
-  queue = MyQueue.new
+  queue = SynchronizedQueue.new
 
   150.times do
     queue.enq({ action: FibSequence, args: [30] })

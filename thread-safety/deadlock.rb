@@ -1,21 +1,20 @@
 @balance = 0
 @mutex = Mutex.new
 
-def one; 1; end
-
-set_initial_balance = Thread.new do
-  @mutex.synchronize do
-    Thread.stop
-    @balance = 42
-  end
+bad_guy = Thread.new do
+  @mutex.lock
+  @balance += 1
+  Thread.stop
+  @mutex.unlock
 end
 
-decrement_balance = Thread.new do
-  @mutex.synchronize do
-    @balance -= one
-  end
+good_guy = Thread.new do
+  @mutex.lock
+  @balance += 1
+  @mutex.unlock
 end
 
-decrement_balance.join
+good_guy.join
+bad_guy.join
 
 puts "Balance is: #{@balance}"
