@@ -1,39 +1,21 @@
 require 'socket'
 require 'async'
-
-def do_some_io
-  fibers = []
-
-  20.times do
-    fibers << Fiber.new do
-      sleep 0.0005
-    end
-  end
-
-  fibers.each(&:resume)
-end
-
-def do_external_request
-  URI.open('http://sleeper:3004/')
-end
+require './web/io-operation-threaded'
 
 pipe = Ractor.new do
   loop do
-    Ractor.yield(Ractor.recv, move: true)
+    Ractor.yield(Ractor.receive, move: true)
   end
 end
 
-CPU_COUNT = 2
-
-workers = CPU_COUNT.times.map do
+workers = 2.times.map do
   Ractor.new(pipe) do |pipe|
     loop do
       client = pipe.take
       request = client.gets
       puts "Request: #{request}"
 
-      #do_some_io
-      do_external_request
+      IOOperationThreaded.call
 
       client.puts("HTTP/1.1 200\r\nContent-Type: text/html\r\n\r\nYo!")
       client.close
@@ -46,7 +28,8 @@ listener = Ractor.new(pipe) do |pipe|
   puts "Listening to the port 3000..."
 
   loop do
-    client = socket.accept
+    client, _ = socket.accept
+
     pipe.send(client, move: true)
   end
 end

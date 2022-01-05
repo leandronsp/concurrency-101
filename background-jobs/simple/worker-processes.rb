@@ -24,7 +24,7 @@ queue = Redis.new(host: 'redis')
       puts "[#{wid}] Started job #{action} with #{args} for #{times} times"
 
       case concurrency.to_s
-        in 'fiber'
+      in 'fiber'
         reactor = Async::Reactor.new
         Fiber.set_scheduler Async::Scheduler.new(reactor)
 
@@ -35,7 +35,7 @@ queue = Redis.new(host: 'redis')
         end
 
         reactor.run
-        in 'ractor'
+      in 'ractor'
         times.times.map do
           Ractor.new(action, args) do |action, args|
             Object.const_get(action).call(*args)

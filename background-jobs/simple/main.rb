@@ -1,8 +1,8 @@
 require './lib/fib-sequence'
 require './lib/sleeper'
-require './lib/synchronized-queue'
+require './lib/simple-queue'
 
-@queue = SynchronizedQueue.new
+@queue = SimpleQueue.new
 
 ### WORKERS ###
 
@@ -73,5 +73,5 @@ loop do
 
   times = gets.to_i
 
-  @queue << { action: action, args: action_args, times: times }
+  @queue.push({ action: action, args: action_args, times: times })
 end

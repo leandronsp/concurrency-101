@@ -1,46 +1,47 @@
-bash:
+ruby:
 	@docker-compose run \
-		--use-aliases \
-		app \
-		bash
-
-gems.install:
-	@docker-compose run app \
-		gem install sidekiq async-io async-http redis pg faker
-
-server.sync:
-	@docker-compose run \
+		--rm \
+		--name ruby \
 		--service-ports \
 		--use-aliases \
-		app \
-		bash -c "ruby web/sync-server.rb"
+		ruby \
+		bash
+
+ruby.attach:
+	@docker exec -it ruby bash
+
+nodejs:
+	@docker-compose run \
+		--rm \
+		--name nodejs \
+		--service-ports \
+		--use-aliases \
+		nodejs \
+		bash
+
+nodejs.attach:
+	@docker exec -it nodejs bash
 
 server.fiber:
 	@docker-compose run \
 		--service-ports \
 		--use-aliases \
 		app \
-		bash -c "ruby web/fiber-server.rb"
+		bash -c "bundle exec ruby web/fiber-server.rb"
 
 server.threaded:
 	@docker-compose run \
 		--service-ports \
 		--use-aliases \
 		app \
-		bash -c "ruby web/threaded-server.rb"
+		bash -c "bundle exec ruby web/threaded-server.rb"
 
 server.ractor:
 	@docker-compose run \
 		--service-ports \
 		--use-aliases \
 		app \
-		bash -c "ruby web/ractor-server.rb"
-
-server.sleeper.api:
-	@docker-compose run \
-		--service-ports \
-		--use-aliases \
-		sleeper
+		bash -c "bundle exec ruby web/ractor-server.rb"
 
 redis:
 	@docker-compose run \
@@ -60,10 +61,3 @@ psql:
 		-it \
 		test-db \
 		psql -U test test
-
-seed.postgres:
-	@docker-compose run \
-		--service-ports \
-		--use-aliases \
-		app \
-		bash -c "ruby web/database/postgres/seed.rb"

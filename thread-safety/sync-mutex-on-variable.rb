@@ -1,3 +1,4 @@
+initial_time = Time.now
 @balance = 0
 @mutex = Mutex.new
 
@@ -14,3 +15,4 @@ def one; 1; end
 end.each(&:join)
 
 puts "Balance is: #{@balance}"
+puts "Done in #{Time.now - initial_time} seconds"

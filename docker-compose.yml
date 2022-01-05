@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  app:
+  ruby:
     image: ruby
     volumes:
       - ./:/app
@@ -9,6 +9,20 @@ services:
     working_dir: /app
     ports:
       - "3000:3000"
+    hostname: ruby
+    networks:
+      - test
+
+  nodejs:
+    image: node
+    volumes:
+      - ./:/app
+      - yarn_cache:/usr/local/share/.cache/yarn/v6
+      - node_modules_cache:/app/node_modules
+    working_dir: /app
+    ports:
+      - "4000:4000"
+    hostname: nodejs
     networks:
       - test
 
@@ -42,6 +56,8 @@ services:
 volumes:
   rubygems:
   pgdata:
+  yarn_cache:
+  node_modules_cache:
 
 networks:
   test:
