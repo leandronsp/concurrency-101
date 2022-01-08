@@ -10,13 +10,13 @@ def threads
 end
 
 def fibers
-  #reactor = Async::Reactor.new
-  #scheduler = Async::Scheduler.new(reactor)
-  #Fiber.set_scheduler scheduler
+  reactor = Async::Reactor.new
+  scheduler = Async::Scheduler.new(reactor)
+  Fiber.set_scheduler(scheduler)
 
   times.times.map { Fiber.new { io }}.each(&:resume)
 
-  #reactor.run
+  reactor.run
 end
 
 def forking
