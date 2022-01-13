@@ -4,7 +4,7 @@ var server = net.createServer(client => {
   client.on('data', request => {
     console.log("Request: " + request)
 
-    client.write("HTTP/1.1 200\r\nContent-Type: text/html\r\n\r\nNodeJS Yo!\n")
+    client.write("HTTP/2 200\r\nContent-Type: text/html\r\n\r\nNodeJS Yo!\n")
     client.end()
   })
 })
