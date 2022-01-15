@@ -30,8 +30,11 @@ GEM
     connection_pool (2.2.5)
     console (1.14.0)
       fiber-local
+    ethon (0.15.0)
+      ffi (>= 1.15.0)
     faker (2.19.0)
       i18n (>= 1.6, < 2)
+    ffi (1.15.5)
     fiber-local (1.0.0)
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
@@ -50,8 +53,11 @@ GEM
       rack (~> 2.0)
       redis (>= 4.2.0)
     timers (4.3.3)
+    typhoeus (1.4.0)
+      ethon (>= 0.9.0)
 
 PLATFORMS
+  aarch64-linux
   x86_64-linux
 
 DEPENDENCIES
@@ -63,6 +69,7 @@ DEPENDENCIES
   pg!
   redis
   sidekiq
+  typhoeus
 
 BUNDLED WITH
    2.3.4
