@@ -1,16 +1,19 @@
 require 'socket'
+require 'async'
 
-PORT, CONCURRENCY = ARGV.values_at(0, 1).map(&:to_i)
-@queue = Queue.new
+reactor = Async::Reactor.new
+Fiber.set_scheduler Async::Scheduler.new(reactor)
+
+PORT = ARGV[0].to_i
 
 socket = TCPServer.new(PORT)
 puts "Listening to the port #{PORT}..."
 
-CONCURRENCY.times do
-  Thread.new do
-    loop do
-      client = @queue.pop
+Fiber.schedule do
+  loop do
+    client = socket.accept
 
+    Fiber.schedule do
       request = ''
 
       while line = client.gets
@@ -28,8 +31,4 @@ CONCURRENCY.times do
   end
 end
 
-loop do
-  client = socket.accept
-
-  @queue.push(client)
-end
+reactor.run

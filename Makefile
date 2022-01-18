@@ -45,7 +45,9 @@ server.ractor:
 
 redis:
 	@docker-compose run \
+		--rm \
 		--use-aliases \
+		--name redis \
 		redis
 
 postgres:

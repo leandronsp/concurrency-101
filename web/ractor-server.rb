@@ -1,21 +1,28 @@
 require 'socket'
-require 'async'
-require './web/io-operation-threaded'
 
-pipe = Ractor.new do
+PORT, CONCURRENCY = ARGV.values_at(0, 1).map(&:to_i)
+
+@queue = Ractor.new do
   loop do
     Ractor.yield(Ractor.receive, move: true)
   end
 end
 
-workers = 2.times.map do
-  Ractor.new(pipe) do |pipe|
+workers = CONCURRENCY.times.map do
+  Ractor.new(@queue) do |queue|
     loop do
-      client = pipe.take
-      request = client.gets
-      puts "Request: #{request}"
+      client = queue.take
 
-      IOOperationThreaded.call
+      request = ''
+
+      while line = client.gets
+        break if line == "\r\n"
+        request += line
+      end
+
+      puts request
+
+      sleep 0.005
 
       client.puts("HTTP/1.1 200\r\nContent-Type: text/html\r\n\r\nYo!")
       client.close
@@ -23,14 +30,14 @@ workers = 2.times.map do
   end
 end
 
-listener = Ractor.new(pipe) do |pipe|
-  socket = TCPServer.new(3000)
-  puts "Listening to the port 3000..."
+listener = Ractor.new(@queue) do |queue|
+  socket = TCPServer.new(PORT)
+  puts "Listening to the port #{PORT}..."
 
   loop do
-    client, _ = socket.accept
+    client = socket.accept
 
-    pipe.send(client, move: true)
+    queue.send(client, move: true)
   end
 end
 
